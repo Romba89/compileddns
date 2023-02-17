@@ -56,8 +56,8 @@ rm -rf /etc/slowdns
 mkdir -m 777 /etc/slowdns
 wget -q -O /etc/slowdns/server.key "https://raw.githubusercontent.com/Romba89/compileddns/main/server.key"
 wget -q -O /etc/slowdns/server.pub "https://raw.githubusercontent.com/Romba89/compileddns/main/server.pub"
-wget -q -O /etc/slowdns/sldns-server "https://raw.githubusercontent.com/Romba89/compileddns/main/dnstt-server"
-wget -q -O /etc/slowdns/sldns-client "https://raw.githubusercontent.com/Romba89/compileddns/main/dnstt-client"
+wget -q -O /etc/slowdns/dnstt-server "https://raw.githubusercontent.com/Romba89/compileddns/main/dnstt-server"
+wget -q -O /etc/slowdns/dnstt-client "https://raw.githubusercontent.com/Romba89/compileddns/main/dnstt-client"
 cd
 chmod +x /etc/slowdns/server.key
 chmod +x /etc/slowdns/server.pub
@@ -82,7 +82,7 @@ User=root
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
-ExecStart=/etc/slowdns/sldns-client -udp 1.1.1.1:53 --pubkey-file /etc/slowdns/server.pub $nameserver 127.0.0.1:2222
+ExecStart=/etc/slowdns/dnstt-client -udp 1.1.1.1:53 --pubkey-file /etc/slowdns/server.pub $nameserver 127.0.0.1:2222
 Restart=on-failure
 
 [Install]
@@ -103,7 +103,7 @@ User=root
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
-ExecStart=/etc/slowdns/sldns-server -udp :5300 -privkey-file /etc/slowdns/server.key $nameserver 127.0.0.1:443
+ExecStart=/etc/slowdns/dnstt-server -udp :5300 -privkey-file /etc/slowdns/server.key $nameserver 127.0.0.1:443
 Restart=on-failure
 
 [Install]
@@ -115,8 +115,8 @@ cd
 chmod +x /etc/systemd/system/client-sldns.service
 
 chmod +x /etc/systemd/system/server-sldns.service
-pkill sldns-server
-pkill sldns-client
+pkill dnstt-server
+pkill dnstt-client
 
 systemctl daemon-reload
 systemctl stop client-sldns
